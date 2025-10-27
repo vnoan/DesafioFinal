@@ -19,11 +19,26 @@ namespace DesafioFinal.Repositories.Scripts
             SELECT *
             FROM {Table};
         ";
+        public static string DeleteGeneric => @"
+            DELETE
+            FROM Clients
+            WHERE Id = @Id;
+        ";
 
         public static string GetClientByEmail => @"
             SELECT * 
             FROM Clients
             WHERE Email = @Email;
+        ";
+
+        public static string InsertClient => @"
+            INSERT INTO Clients (Id, Email, Name, Phone, Address, City)
+            VALUES (@Id, @Email, @Name, @Phone, @Address, @City);
+        ";
+        public static string UpdateClient => @"
+            UPDATE Clients
+            SET Name = @Name, Address = @Address  
+            WHERE Id = @Id;
         ";
     }
 }

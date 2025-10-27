@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using DesafioFinal.Models;
 using DesafioFinal.Repositories.Scripts;
-using DesafioFinal.Repositories.SQLScripts;
 using System.Data;
 
 namespace DesafioFinal.Repositories
@@ -14,13 +13,13 @@ namespace DesafioFinal.Repositories
         {
             _connection = connection;
         }
-        
+
         public virtual async Task<IEnumerable<T>> GetAll(string table)
         {
             return await _connection.QueryAsync<T>(SQLScripts.GetAllGeneric.Replace("{Table}", table));
         }
 
-        public virtual async Task<T> GetById(int id, string table)
+        public virtual async Task<T> GetById(string table, int id)
         {
             return await _connection.QuerySingleOrDefaultAsync<T>(SQLScripts.GetGeneric.Replace("{Table}", table), new { Id = id });
         }
@@ -30,19 +29,9 @@ namespace DesafioFinal.Repositories
             return await _connection.QueryFirstAsync<int>(SQLScripts.CountGeneric.Replace("{Table}", table));
         }
 
-        public virtual void Create(T entity)
+        public virtual async Task<int> Delete(string table, int id)
         {
-
-        }
-
-        public virtual void Update(T entity)
-        {
-
-        }
-
-        public virtual void Delete(int id)
-        {
-
+            return await _connection.ExecuteAsync(SQLScripts.DeleteGeneric.Replace("{Table}", table), new { Id = id});
         }
     }
 }

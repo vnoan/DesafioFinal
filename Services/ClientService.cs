@@ -3,6 +3,7 @@ using DesafioFinal.Repositories;
 
 namespace DesafioFinal.Services
 {
+    // Classe de exemplo para compreensão dos papéis dos serviços
     public class ClientService
     {
         private readonly ClientRepository _clientRepository;
@@ -12,38 +13,50 @@ namespace DesafioFinal.Services
             _clientRepository = clientRepository;
         }
 
-        public Client GetClientById(int id)
+        public async Task<Client> GetClientByIdAsync(int id)
         {
-            return _clientRepository.GetById(id);
+            return await _clientRepository.GetById(id);
         }
-        public Client GetClientByEmail(string email)
+        public async Task<Client> GetClientByEmailAsync(string email)
         {
-            return _clientRepository.GetByEmail(email);
-        }
-
-        public List<Client> GetAll()
-        {
-            return _clientRepository.GetAll();
+            return await _clientRepository.GetByEmail(email);
         }
 
-        public int GetCount()
+        public async Task<List<Client>> GetAllAsync()
         {
-            return _clientRepository.CountAsync();
+            return await _clientRepository.GetAll();
         }
 
-        public bool CreateClient(Client c)
+        public async Task<int> GetCountAsync()
         {
-            throw new NotImplementedException();
+            return await _clientRepository.CountAsync();
         }
 
-        public bool UpdateClient(Client c)
+        public async Task<bool> CreateClient(Client c)
         {
-            throw new NotImplementedException();
+            var checkClient = await _clientRepository.GetByEmail(c.Email);
+
+            if (checkClient != null)
+                return false;
+
+            await _clientRepository.CreateClient(c);
+            return true;
         }
 
-        public bool DeleteClient(int id)
+        public async Task<bool> UpdateClient(Client c)
         {
-            throw new NotImplementedException();
+            var linesChanged = await _clientRepository.UpdateClient(c);
+            if(linesChanged > 0)
+                return true;
+            return false;
+        }
+
+        public async Task<bool> DeleteClientAsync(int id)
+        {
+            var linesChanged = await _clientRepository.DeleteClient(id);
+            if (linesChanged > 0)
+                return true;
+            return false;
         }
     }
 }
